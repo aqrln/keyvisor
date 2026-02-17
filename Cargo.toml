@@ -1,8 +1,8 @@
 [package]
-edition      = "2024"
-name         = "keyvisor"
+edition = "2024"
+name = "keyvisor"
 rust-version = "1.88"
-version      = "0.1.0"
+version = "0.1.0"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
@@ -31,10 +31,10 @@ derive_more = { version = "2.1.1", default-features = false, features = ["from"]
 opt-level = "s"
 
 [profile.release]
-codegen-units    = 1
-debug            = 2
+codegen-units = 1
+debug = 2
 debug-assertions = false
-incremental      = false
-lto              = 'fat'
-opt-level        = 's'
-overflow-checks  = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
