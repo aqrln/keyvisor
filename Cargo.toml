@@ -1,0 +1,39 @@
+[package]
+edition      = "2024"
+name         = "keyvisor"
+rust-version = "1.88"
+version      = "0.1.0"
+
+[dependencies]
+critical-section = "1.2.0"
+defmt = "1.0.1"
+esp-backtrace = { version = "0.18.1", features = [
+  "defmt",
+  "esp32c6",
+  "panic-handler",
+] }
+esp-bootloader-esp-idf = { version = "0.4.0", features = ["defmt", "esp32c6"] }
+embassy-embedded-hal = { version = "0.5.0", features = ["defmt"] }
+embassy-executor = { version = "0.9.1", features = ["defmt"] }
+embassy-sync = { version = "0.7.2", features = ["defmt"] }
+embassy-time = { version = "0.5.0", features = ["defmt"] }
+embedded-graphics = { version = "0.8.2", features = ["defmt", "fixed_point"] }
+embedded-hal = { version = "1.0.0", features = ["defmt-03"] }
+esp-hal = { version = "~1.0", features = ["defmt", "esp32c6", "unstable"] }
+esp-println = { version = "0.16.1", features = ["defmt-espflash", "esp32c6"] }
+esp-rtos = { version = "0.2.0", features = ["defmt", "embassy", "esp32c6"] }
+lcd-async = "0.1.1"
+static_cell = "2.1.1"
+derive_more = { version = "2.1.1", default-features = false, features = ["from"] }
+
+[profile.dev]
+opt-level = "s"
+
+[profile.release]
+codegen-units    = 1
+debug            = 2
+debug-assertions = false
+incremental      = false
+lto              = 'fat'
+opt-level        = 's'
+overflow-checks  = false
