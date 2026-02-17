@@ -3,6 +3,7 @@ edition      = "2024"
 name         = "keyvisor"
 rust-version = "1.88"
 version      = "0.1.0"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 critical-section = "1.2.0"
