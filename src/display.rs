@@ -15,7 +15,7 @@ use esp_hal::{
 };
 use lcd_async::{
     Builder, Display,
-    interface::{Interface, SpiInterface},
+    interface::SpiInterface,
     models::ST7789,
     options::{ColorInversion, Orientation, Rotation},
     raw_framebuf::RawFrameBuf,
@@ -28,11 +28,14 @@ pub const WIDTH: u16 = 240;
 pub const HEIGHT: u16 = 240;
 pub const PIXEL_SIZE: usize = 2; // RGB565 = 2 bytes per pixel
 
-pub struct DisplayState<I: Interface> {
-    pub display: Display<I, ST7789, Output<'static>>,
+pub struct DisplayState {
+    pub display: Display<DisplayInterface, ST7789, Output<'static>>,
     pub fb: RawFrameBuf<Rgb565, &'static mut [u8]>,
     pub backlight: Backlight,
 }
+
+type DisplayInterface =
+    SpiInterface<SpiDevice<'static, NoopRawMutex, SpiBus, Output<'static>>, Output<'static>>;
 
 pub struct DisplayPeripherals {
     pub scl: AnyPin<'static>,
@@ -46,10 +49,7 @@ pub struct DisplayPeripherals {
     pub dma_ch: DMA_CH0<'static>,
 }
 
-type DisplayInterface =
-    SpiInterface<SpiDevice<'static, NoopRawMutex, SpiBus, Output<'static>>, Output<'static>>;
-
-impl DisplayState<DisplayInterface> {
+impl DisplayState {
     pub async fn init(peripherals: DisplayPeripherals) -> Result<Self, AppError> {
         let backlight = Backlight::init(peripherals.ledc, peripherals.bl)?;
 
