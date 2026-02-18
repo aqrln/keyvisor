@@ -10,7 +10,10 @@
 use embassy_executor::Spawner;
 use esp_hal::clock::CpuClock;
 use esp_hal::timer::timg::TimerGroup;
-use keyvisor::display::{DisplayPeripherals, DisplayState};
+use keyvisor::{
+    display::{DisplayPeripherals, DisplayState},
+    ui,
+};
 use {esp_backtrace as _, esp_println as _};
 
 // This creates a default app-descriptor required by the esp-idf bootloader.
@@ -22,7 +25,7 @@ esp_bootloader_esp_idf::esp_app_desc!();
     reason = "it's not unusual to allocate larger buffers etc. in main"
 )]
 #[esp_rtos::main]
-async fn main(_spawner: Spawner) {
+async fn main(spawner: Spawner) {
     // generator version: 1.2.0
 
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::max());
@@ -33,7 +36,7 @@ async fn main(_spawner: Spawner) {
         esp_hal::interrupt::software::SoftwareInterruptControl::new(peripherals.SW_INTERRUPT);
     esp_rtos::start(timg0.timer0, sw_interrupt.software_interrupt0);
 
-    let _display_state = DisplayState::init(DisplayPeripherals {
+    let display_state = DisplayState::init(DisplayPeripherals {
         scl: peripherals.GPIO19.into(),
         sda: peripherals.GPIO20.into(),
         rst: peripherals.GPIO21.into(),
@@ -46,4 +49,6 @@ async fn main(_spawner: Spawner) {
     })
     .await
     .expect("couldn't initialize display");
+
+    spawner.must_spawn(ui::task(display_state));
 }
