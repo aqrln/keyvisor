@@ -1,11 +1,16 @@
 use bitvec::prelude::*;
 use defmt::{Format, debug, info, trace};
-use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
+use embassy_sync::{
+    blocking_mutex::raw::CriticalSectionRawMutex,
+    pubsub::{DynSubscriber, PubSubChannel},
+};
 use embassy_time::{Duration, Ticker, Timer};
 use esp_hal::gpio::{AnyPin, DriveMode, Input, InputConfig, Level, Output, OutputConfig, Pull};
 
-const N_COLS: usize = 3;
-const N_ROWS: usize = 4;
+use crate::error::AppError;
+
+pub const N_COLS: usize = 3;
+pub const N_ROWS: usize = 4;
 
 const SCAN_SPEED_HZ: u64 = 400;
 const SCAN_READ_DELAY_MICROS: u64 = 2;
@@ -16,8 +21,8 @@ type TickCount = u8;
 
 #[derive(Copy, Clone, Debug, Format, PartialEq, Eq)]
 pub struct Key {
-    col: u8,
-    row: u8,
+    pub col: u8,
+    pub row: u8,
 }
 
 impl Key {
@@ -47,6 +52,10 @@ pub enum KeyEvent {
 }
 
 static CHANNEL: PubSubChannel<CriticalSectionRawMutex, KeyEvent, 32, 1, 1> = PubSubChannel::new();
+
+pub fn subscriber() -> Result<DynSubscriber<'static, KeyEvent>, AppError> {
+    CHANNEL.dyn_subscriber().map_err(<_>::into)
+}
 
 pub struct KeyboardInterface<'p> {
     columns: [Output<'p>; N_COLS],
