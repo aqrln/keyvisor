@@ -183,14 +183,14 @@ pub async fn task(mut kbd: KeyboardInterface<'static>) {
                 let publisher = CHANNEL.immediate_publisher();
 
                 for row in updates.released_keys.iter_ones() {
-                    publisher.publish_immediate(KeyEvent::KeyDown(Key {
+                    publisher.publish_immediate(KeyEvent::KeyUp(Key {
                         col: col as u8,
                         row: row as u8,
                     }));
                 }
 
                 for row in updates.pressed_keys.iter_ones() {
-                    publisher.publish_immediate(KeyEvent::KeyUp(Key {
+                    publisher.publish_immediate(KeyEvent::KeyDown(Key {
                         col: col as u8,
                         row: row as u8,
                     }));
