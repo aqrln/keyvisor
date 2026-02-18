@@ -9,7 +9,7 @@ const N_ROWS: usize = 4;
 
 const SCAN_SPEED_HZ: u64 = 400;
 const SCAN_READ_DELAY_MICROS: u64 = 2;
-const DEBOUNCE_TICKS: TickCount = 2;
+const DEBOUNCE_TICKS: TickCount = 10;
 
 type ColumnState = BitArr!(for N_ROWS, in u8);
 type TickCount = u8;
