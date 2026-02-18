@@ -12,6 +12,7 @@ use esp_hal::clock::CpuClock;
 use esp_hal::timer::timg::TimerGroup;
 use keyvisor::{
     display::{DisplayPeripherals, DisplayState},
+    kbd::{self, KeyboardInterface},
     ui,
 };
 use {esp_backtrace as _, esp_println as _};
@@ -51,4 +52,20 @@ async fn main(spawner: Spawner) {
     .expect("couldn't initialize display");
 
     spawner.must_spawn(ui::task(display_state));
+
+    let kbd = KeyboardInterface::new(
+        [
+            peripherals.GPIO11.into(),
+            peripherals.GPIO10.into(),
+            peripherals.GPIO1.into(),
+        ],
+        [
+            peripherals.GPIO8.into(),
+            peripherals.GPIO12.into(),
+            peripherals.GPIO13.into(),
+            peripherals.GPIO0.into(),
+        ],
+    );
+
+    spawner.must_spawn(kbd::task(kbd));
 }

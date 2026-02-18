@@ -25,6 +25,7 @@ esp-rtos = { version = "0.2.0", features = ["defmt", "embassy", "esp32c6"] }
 lcd-async = "0.1.1"
 static_cell = "2.1.1"
 derive_more = { version = "2.1.1", default-features = false, features = ["from"] }
+bitvec = { version = "1.0.1", default-features = false }
 
 [profile.dev]
 opt-level = "s"
