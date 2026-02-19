@@ -1,10 +1,10 @@
 use embedded_graphics::{
-    mono_font::{MonoTextStyleBuilder, ascii::FONT_10X20},
     pixelcolor::Rgb565,
     prelude::*,
     primitives::{PrimitiveStyleBuilder, Rectangle, RoundedRectangle},
-    text::{Alignment, Text},
+    text::{Alignment, Baseline, Text, TextStyleBuilder},
 };
+use u8g2_fonts::{U8g2TextStyle, fonts::u8g2_font_helvB18_te};
 
 use crate::{
     display::{self, DisplayState},
@@ -113,14 +113,14 @@ impl KbdRenderer {
         let mut buf = [0u8; 4];
         let label = key.char().encode_utf8(&mut buf);
 
-        _ = Text::with_alignment(
+        _ = Text::with_text_style(
             label,
-            top_left + Point::new(WIDTH as i32 / 2, HEIGHT as i32 / 2 + 5),
-            MonoTextStyleBuilder::new()
-                .text_color(btn.text_color)
-                .font(&FONT_10X20)
+            top_left + Point::new(WIDTH as i32 / 2, HEIGHT as i32 / 2),
+            U8g2TextStyle::new(u8g2_font_helvB18_te, btn.text_color),
+            TextStyleBuilder::new()
+                .alignment(Alignment::Center)
+                .baseline(Baseline::Middle)
                 .build(),
-            Alignment::Center,
         )
         .draw(&mut self.display_state.fb);
 
