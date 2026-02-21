@@ -12,6 +12,7 @@ pub enum AppError {
     LedcTimerError(esp_hal::ledc::timer::Error),
     LedcChannelError(esp_hal::ledc::channel::Error),
     PubSubError(embassy_sync::pubsub::Error),
+    Unreachable(Infallible),
 }
 
 type LcdAsyncSpiError =
