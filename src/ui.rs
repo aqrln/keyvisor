@@ -51,12 +51,11 @@ async fn ui_main(mut display_state: DisplayState) -> Result<(), AppError> {
             KeyEvent::KeyUp(key) => update(key, Direction::Up, &mut display_state.fb),
         }?;
 
-        let y = bounds.top_left.y;
-        let height = bounds.size.height;
+        let y = bounds.top_left.y as usize;
+        let height = bounds.size.height as usize;
 
-        let stripe_start = y as usize * display_state.fb.width() * display::PIXEL_SIZE;
-        let stripe_end =
-            (y as usize + height as usize) * display_state.fb.width() * display::PIXEL_SIZE;
+        let stripe_start = y * display_state.fb.width() * display::PIXEL_SIZE;
+        let stripe_end = (y + height) * display_state.fb.width() * display::PIXEL_SIZE;
 
         let pixel_data = &display_state.fb.as_bytes()[stripe_start..stripe_end];
 
